@@ -175,13 +175,11 @@ export default function RecipeReviewCard() {
                 console.log("result: ",results);
                 setBloglength(results.length);
     
-                if(tagid!=0){
-                  console.log("TAG: ",tagid)
-                  setPagetitle(results[0].tags[0].name)
-                  console.log("TAG: ",pagetitle)
-                }
               const updatedResults = results.map(results => {
     
+                if(tagid!=0){
+                  setPagetitle(results[0].tags[0].name)
+                }
                 var timestamp = new Date(results.createdAt)
                 // let gmt = date['toGMTString']();
                 var dateString = timestamp['toGMTString']()
