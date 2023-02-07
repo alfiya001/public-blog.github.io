@@ -1,0 +1,47 @@
+#logging:
+#  level:
+#    '[org.springframework]': debug
+#    '[com.blog]': debug
+#    '[org.hibernate.sql]': trace
+#    '[org.hibernate.type.descriptor.sql]': trace
+##pattern:
+##console: %d{dd-MM-yy} %d{HH:mm:ss.SSS} %-20.20thread %5p %-25.25logger{25} %25M %4L %m%n
+#
+#
+#
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/blogdb
+#    username: root
+#    password: root
+#  jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#      dialect: org.hibernate.dialect.MySQL8Dialect
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:emsauth
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+server:
+  port: 8090
+springdoc:
+  api-docs:
+    path: /docs/v3/api-docs
+#spring.mvc.pathmatch.matching-strategy = ANT_PATH_MATCHER
+# swagger-ui custom path
+#springdoc
