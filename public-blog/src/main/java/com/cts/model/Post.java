@@ -17,10 +17,11 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.builder.ToStringExclude;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -60,7 +61,7 @@ public class Post extends AuditModel {
 	private String title;
 
 	@NotNull
-//	@Min(value = 2, message = "Description must contain atleast 50 charactes.")
+	@Size(max = 2000)
 	private String description;
 
 //	@JsonIgnore

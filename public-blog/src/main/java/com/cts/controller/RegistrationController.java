@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -70,7 +71,7 @@ public class RegistrationController {
 		log.info("save::" + saveUser);
 		userLogin.setUser(saveUser);
 		userLoginRepository.save(userLogin);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(HttpStatus.CREATED);
 	}
 
 	@PreAuthorize("hasRole('USER') OR hasAuthority('ADMIN') or hasAuthority('AUTHOR')")

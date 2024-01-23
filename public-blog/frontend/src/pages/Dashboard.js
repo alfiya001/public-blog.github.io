@@ -12,7 +12,9 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import GroupIcon from '@mui/icons-material/Group';
+import GroupsRoundedIcon from '@mui/icons-material/GroupsRounded';
+import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import { useNavigate, useLocation } from "react-router-dom";
 
 import TextField from '@mui/material/TextField';
@@ -56,16 +58,16 @@ export default function Dashboard() {
 
   let navigate = useNavigate();
   const location = useLocation();
-  const [pageChange,SetPageChange]=React.useState("write");
+  const [pageChange, SetPageChange] = React.useState("write");
   const classes = useStyles();
   localStorage.setItem("tag", 0);
 
   const [tag, setTag] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   let role = localStorage.getItem("userrole");
-    
+
   const { register, handleSubmit, formState: { errors } } = useForm();
-  
+
   const handleChange = (event) => {
     localStorage.setItem("USER_KEY", "");
     navigate("/signin");
@@ -77,13 +79,13 @@ export default function Dashboard() {
     navigate("/dashboard");
   };
   const handleTagChange = (event) => {
-      
+
   };
 
   useEffect(() => {
-    if(role=="AUTHOR")
+    if (role == "AUTHOR")
       SetPageChange("write");
-    else if(role=="ADMIN")
+    else if (role == "ADMIN")
       SetPageChange("user-list")
     getAllTag();
   }, []);
@@ -111,30 +113,30 @@ export default function Dashboard() {
         id: data.tag
       }]
     }
-    console.log("data:",reqdata)
+    console.log("data:", reqdata)
     const userid = localStorage.getItem("userid");
-    axios.post(`http://localhost:8090/post/${userid}`,reqdata, {
+    axios.post(`http://localhost:8090/post/${userid}`, reqdata, {
       headers: {
         authorization: "Bearer " + getToken(),
         'Content-Type': 'application/json',
       },
     })
-        .then(response => {
-          console.log(response)
-          if(localStorage.getItem("userrole")=="AUTHOR")
-            SetPageChange("author-blog");
-            // navigate("/author-blog-list") 
-          else
-            SetPageChange("blog-list");
-            // navigate("/admin-blog-list") 
-            setIsLoading(false);
-            document.getElementById("write-blog").reset();
-        })
-        .catch(error => {
-            // this.setState({ errorMessage: error.message });
-            console.error('There was an error!', error);
-        });
-        data.target.reset();
+      .then(response => {
+        console.log(response)
+        if (localStorage.getItem("userrole") == "AUTHOR")
+          SetPageChange("author-blog");
+        // navigate("/author-blog-list") 
+        else
+          SetPageChange("blog-list");
+        // navigate("/admin-blog-list") 
+        setIsLoading(false);
+        document.getElementById("write-blog").reset();
+      })
+      .catch(error => {
+        // this.setState({ errorMessage: error.message });
+        console.error('There was an error!', error);
+      });
+    data.target.reset();
   }
   return (
     <Box sx={{ display: 'flex' }}>
@@ -142,21 +144,22 @@ export default function Dashboard() {
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <Typography variant="h6" className={classes.type1} noWrap component="div" onClick={(event) => {
-            navigate(`/`);}}>
+            navigate(`/`);
+          }}>
             Public Blog
           </Typography>
           {(() => {
-          if (role != "USER") {
+            if (role != "USER") {
               return <div>
-              <Typography
-                variant="h6"
-                color="textSecondary"
-                className={classes.type2}
-                onClick={handleChangeDashboard}
-              >
-                Dashboard&nbsp;
-              </Typography>
-            </div>;
+                <Typography
+                  variant="h6"
+                  color="textSecondary"
+                  className={classes.type2}
+                  onClick={handleChangeDashboard}
+                >
+                  Dashboard&nbsp;
+                </Typography>
+              </div>;
             }
           })()}
           {/* {(() => {
@@ -187,14 +190,14 @@ export default function Dashboard() {
             }
           })()} */}
           <div>
-          <Typography
-            variant="h6"
-            color="textSecondary"
-            className={classes.type2}
-            onClick={handleChange}
-          > 
-          Logout
-          </Typography>
+            <Typography
+              variant="h6"
+              color="textSecondary"
+              className={classes.type2}
+              onClick={handleChange}
+            >
+              Logout
+            </Typography>
           </div>
         </Toolbar>
       </AppBar>
@@ -209,72 +212,72 @@ export default function Dashboard() {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           {/* {console.log("role: ",role)} */}
-        {(() => {
-          if (role == "AUTHOR") {
-          console.log("role: ",role)
-          return <div>
-          <List>
-            {/* {['Write Blog', 'List of Blog', 'Send email', 'Drafts'].map((text, index) => ( */}
-              <ListItem key="write-blog" disablePadding onClick={() => SetPageChange("write")}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <MailIcon />
-                    {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-                  </ListItemIcon>
-                  <ListItemText primary="Write Blog" />
-                </ListItemButton>
-              </ListItem>
-            {/* // ))} */}
-          </List>
-          <Divider />
-          <List>
-            {/* {['All mail', 'Trash', 'Spam'].map((text, index) => ( */}
-              <ListItem key="blog-list" disablePadding onClick={() => SetPageChange("author-blog")}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <MailIcon />
-                    {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
-                  </ListItemIcon>
-                  <ListItemText primary="Blog" />
-                </ListItemButton>
-              </ListItem>
-            {/* ))} */}
-          </List>
-          </div>
-          } else if (role == "ADMIN") {
-          return <div>
-            <List>
-              <ListItem key="user-list" disablePadding onClick={() => SetPageChange("user-list")}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <MailIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="User List" />
-                </ListItemButton>
-              </ListItem>
-          </List>
-          <List>
-              <ListItem key="author-list" disablePadding onClick={() => SetPageChange("author-list")}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <MailIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Author List" />
-                </ListItemButton>
-              </ListItem>
-          </List>
-          <List>
-              <ListItem key="blog-list" disablePadding onClick={() => SetPageChange("blog-list")}>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <MailIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Blog List" />
-                </ListItemButton>
-              </ListItem>
-          </List>
-          </div>
-          }
+          {(() => {
+            if (role == "AUTHOR") {
+              console.log("role: ", role)
+              return <div>
+                <List>
+                  {/* {['Write Blog', 'List of Blog', 'Send email', 'Drafts'].map((text, index) => ( */}
+                  <ListItem key="write-blog" disablePadding onClick={() => SetPageChange("write")}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <GroupIcon />
+                        {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                      </ListItemIcon>
+                      <ListItemText primary="Write Blog" />
+                    </ListItemButton>
+                  </ListItem>
+                  {/* // ))} */}
+                </List>
+                <Divider />
+                <List>
+                  {/* {['All mail', 'Trash', 'Spam'].map((text, index) => ( */}
+                  <ListItem key="blog-list" disablePadding onClick={() => SetPageChange("author-blog")}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <DynamicFeedIcon />
+                        {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                      </ListItemIcon>
+                      <ListItemText primary="Blog" />
+                    </ListItemButton>
+                  </ListItem>
+                  {/* ))} */}
+                </List>
+              </div>
+            } else if (role == "ADMIN") {
+              return <div>
+                <List>
+                  <ListItem key="user-list" disablePadding onClick={() => SetPageChange("user-list")}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <GroupsRoundedIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="User List" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+                <List>
+                  <ListItem key="author-list" disablePadding onClick={() => SetPageChange("author-list")}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <GroupIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Author List" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+                <List>
+                  <ListItem key="blog-list" disablePadding onClick={() => SetPageChange("blog-list")}>
+                    <ListItemButton>
+                      <ListItemIcon>
+                        <DynamicFeedIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Blog List" />
+                    </ListItemButton>
+                  </ListItem>
+                </List>
+              </div>
+            }
           })()}
         </Box>
       </Drawer>
@@ -286,110 +289,118 @@ export default function Dashboard() {
             
         } */}
         {(() => {
-        if(pageChange=="write")  {
-            return(
+          if (pageChange == "write") {
+            return (
               // <Write />
-        <Box
-        component="form"
-        id="write-blog"
-        sx={{
-        '& .MuiTextField-root': { m: 1, width: '75ch' },
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit(onSubmit)}
-        >
-        
-        {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}> */}
-        <Box component="main">
-        <Toolbar />
-        <Typography paragraph>
-        <TextField
-                sx={{border: "outset 2px #666666"}}
-                id="title"
-                label="Title"
-                
-                fullwidth
-                multiline
-                rows={1}
-                {...register("title", { required: "Title is required." })}
-                  error={Boolean(errors.title)}
-                  helperText={errors.title?.message}
-                />
-          <TextField
-            sx={{border: "outset 2px #666666"}}
-            id="description"
-            label="description"
-           
-            fullwidth
-            multiline
-            rows={20}
-            {...register("description", { required: "required." })}
-                  error={Boolean(errors.description)}
-                  helperText={errors.description?.message}
-            />
-            <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            spacing={7}
-        >
+              <Box
+                component="form"
+                id="write-blog"
+                sx={{
+                  '& .MuiTextField-root': { m: 1, width: '75ch' },
+                }}
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit(onSubmit)}
+              >
 
-            <FormControl sx={{width: '15%', marginTop: '0.25rem', border: "outset" }}>
-                <InputLabel id="tag">Tag</InputLabel>
-                <Select
-                labelId="tag"
-                id="tag"
-                
-                label="Tag"
-                {...register("tag", { required: "Select tag." })}
-                  error={Boolean(errors.tag)}
-                  helperText={errors.tag?.message}
-                onChange={handleTagChange}
-                >
-                  {tag.map((t) => {
-                    return (
-                      <MenuItem value={t.id}>{t.name}</MenuItem>
-                    )
-                  })}
-                </Select>
-            </FormControl>
-        
-        <Button type="submit" variant="contained" size="large" alignment="center">
-              Post
-        </Button>
+                {/* <Box component="main" sx={{ flexGrow: 1, p: 3 }}> */}
+                <Box component="main" sx={{  marginTop: "15px", ml: 25, width: "70%", padding: "20px", backgroundColor: "#fff", boxShadow: "0 5px 15px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.1)" }}>
+                  <Typography sx={{ marginBottom: 0 }} gutterBottom variant="h5" component="h2">
+                    Write Blog
+                  </Typography>
+                  <Toolbar />
+                  <Typography sx={{ marginTop: "0px", paddingTop: "0px" }} paragraph>
+                    <TextField
+                      sx={{ border: "outset 2px #666666" }}
+                      id="title"
+                      label="Title"
 
-        </Stack>
-        <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 2 }}
-        >
-        </Box>
-        </Typography>
-        </Box>  
+                      style={{ backgroundColor: "transparent", border: 0 }}
+                      fullwidth
+                      multiline
+                      rows={1}
+                      {...register("title", { required: "Title is required." })}
+                      error={Boolean(errors.title)}
+                      helperText={errors.title?.message}
+                    />
+                    <TextField
+                      sx={{ border: "outset 2px #666666" }}
+                      id="description"
+                      label="Description"
+                      style={{ backgroundColor: "transparent", border: 0 }}
+                      fullwidth
+                      multiline
+                      rows={15}
+                      {...register("description", { required: "Description is required." })}
+                      error={Boolean(errors.description)}
+                      helperText={errors.description?.message}
+                    />
+                    <Stack
+                      direction="column"
+                      justifyContent="center"
+                      alignItems="center"
+                      spacing={7}
+                    >
 
-      </Box>
-      )
-            } else if(pageChange=="author-blog") {
-        return(
-          <Box component="main">
-            <AuthorBlogList />
-          </Box>) } else if(pageChange=="author-list") {
-        return(
-        <div>
-            <AuthorList />
-        </div>
-        ) }
-        else if(pageChange=="user-list") {
-          return(
-            <Typography paragraph>
-              <UserList />
-            </Typography>) }
-        else if(pageChange=="blog-list") {
-          return(
-            <Typography paragraph>
-              <AdminBlogList />
-            </Typography>) }
+                      <FormControl sx={{ whiteSpace:"pre", width: '77%', marginTop: '0.25rem' }}>
+                        <InputLabel id="tag">Tag</InputLabel>
+                        <Select
+                          labelId="tag"
+                          id="tag"
+
+                          label="Tag"
+                          {...register("tag", { required: "Select tag." })}
+                          error={Boolean(errors.tag)}
+                          helperText={errors.tag?.message}
+                          onChange={handleTagChange}
+                        >
+                          {tag.map((t) => {
+                            return (
+                              <MenuItem value={t.id}>{t.name}</MenuItem>
+                            )
+                          })}
+                        </Select>
+                      </FormControl>
+
+                      <Button sx={{ alignItems:"left" }} type="submit" variant="contained" size="large" alignment="center">
+                        Post
+                      </Button>
+
+                    </Stack>
+                    <Box
+                      component="main"
+                      sx={{ flexGrow: 1, bgcolor: 'background.default', p: 2 }}
+                    >
+                    </Box>
+                  </Typography>
+                </Box> 
+
+              </Box>
+            )
+          } else if (pageChange == "author-blog") {
+            return (
+              <Box component="main" style={{ width: "80%", margin: "0 10px", height: "100%"}}>
+                <AuthorBlogList />
+              </Box>)
+          } else if (pageChange == "author-list") {
+            return (
+              <div>
+                <AuthorList />
+              </div>
+            )
+          }
+          else if (pageChange == "user-list") {
+            return (
+              <Typography paragraph>
+                <UserList />
+              </Typography>)
+          }
+          else if (pageChange == "blog-list") {
+            return (
+              <Typography paragraph>
+                <AdminBlogList />
+              </Typography>)
+          }
         })()}
       </Box>
     </Box>

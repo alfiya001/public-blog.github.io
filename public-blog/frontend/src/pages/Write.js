@@ -20,14 +20,14 @@ import Typography from '@mui/material/Typography';
 
 export default function Write() {
 
-    const [tag, setTag] = React.useState([]);
-    // const [title, setTitle] = React.useState('');
-    // const [post, setPost] = React.useState('');
-    
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    let navigate = useNavigate();
-    const handleChange = (event) => {
-      
+  const [tag, setTag] = React.useState([]);
+  // const [title, setTitle] = React.useState('');
+  // const [post, setPost] = React.useState('');
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  let navigate = useNavigate();
+  const handleChange = (event) => {
+
   };
 
   useEffect(() => {
@@ -56,107 +56,108 @@ export default function Write() {
         id: data.tag
       }]
     }
-    console.log("data:",reqdata)
+    console.log("data:", reqdata)
     const userid = localStorage.getItem("userid");
-    axios.post(`http://localhost:8090/post/${userid}`,reqdata, {
+    axios.post(`http://localhost:8090/post/${userid}`, reqdata, {
       headers: {
         authorization: "Bearer " + getToken(),
         'Content-Type': 'application/json',
       },
     })
-        .then(response => {
-          console.log(response)
-          if(localStorage.getItem("userrole")=="AUTHOR")
-            navigate("/author-blog-list") 
-          else
-            navigate("/admin-blog-list") 
-        })
-        .catch(error => {
-            // this.setState({ errorMessage: error.message });
-            console.error('There was an error!', error);
-        });
+      .then(response => {
+        console.log(response)
+        if (localStorage.getItem("userrole") == "AUTHOR")
+          navigate("/author-blog-list")
+        else
+          navigate("/admin-blog-list")
+      })
+      .catch(error => {
+        // this.setState({ errorMessage: error.message });
+        console.error('There was an error!', error);
+      });
   }
   return (
     <Box
-        component="form"
-        sx={{
+      component="form"
+      sx={{
         '& .MuiTextField-root': { m: 1, width: '75ch' },
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit(onSubmit)}
+      }}
+      noValidate
+      autoComplete="off"
+      onSubmit={handleSubmit(onSubmit)}
     >
-        <AuthorDashboard />
-        {/* <ClippedDrawer /> */}
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <AuthorDashboard />
+      {/* <ClippedDrawer /> */}
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <Typography paragraph>
-        <TextField
-                sx={{border: "outset 2px #666666"}}
-                id="title"
-                label="Title"
-                
-                fullwidth
-                multiline
-                rows={1}
-                {...register("title", { required: "Title is required." })}
-                  error={Boolean(errors.title)}
-                  helperText={errors.title?.message}
-                />
           <TextField
-            sx={{border: "outset 2px #666666"}}
+            sx={{ border: "outset 2px #666666" }}
+            
+            id="title"
+            label="Title"
+
+            fullwidth
+            multiline
+            rows={1}
+            {...register("title", { required: "Title is required." })}
+            error={Boolean(errors.title)}
+            helperText={errors.title?.message}
+          />
+          <TextField
+            sx={{ border: "outset 2px #666666" }}
             id="description"
             label="description"
-           
+
             fullwidth
             multiline
             rows={20}
             {...register("description", { required: "required." })}
-                  error={Boolean(errors.description)}
-                  helperText={errors.description?.message}
-            />
-            <Stack
+            error={Boolean(errors.description)}
+            helperText={errors.description?.message}
+          />
+          <Stack
             direction="row"
             justifyContent="center"
             alignItems="center"
             spacing={7}
-        >
+          >
 
-            <FormControl sx={{width: '15%', marginTop: '0.25rem', border: "outset" }}>
-                <InputLabel id="tag">Tag</InputLabel>
-                <Select
+            <FormControl sx={{ width: '15%', marginTop: '0.25rem', border: "outset" }}>
+              <InputLabel id="tag">Tag</InputLabel>
+              <Select
                 labelId="tag"
                 id="tag"
-                
+
                 label="Tag"
                 {...register("tag", { required: "Select tag." })}
-                  error={Boolean(errors.tag)}
-                  helperText={errors.tag?.message}
+                error={Boolean(errors.tag)}
+                helperText={errors.tag?.message}
                 onChange={handleChange}
-                >
-                  {tag.map((t) => {
-                    return (
-                      <MenuItem value={t.id}>{t.name}</MenuItem>
-                    )
-                  })}
-                </Select>
+              >
+                {tag.map((t) => {
+                  return (
+                    <MenuItem value={t.id}>{t.name}</MenuItem>
+                  )
+                })}
+              </Select>
             </FormControl>
-        
-        <Button type="submit" variant="contained" size="large" alignment="center">
+
+            <Button type="submit" variant="contained" size="large" alignment="center">
               Post
-        </Button>
+            </Button>
 
-        </Stack>
-        <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 2 }}
-        >
-        </Box>
+          </Stack>
+          <Box
+            component="main"
+            sx={{ flexGrow: 1, bgcolor: 'background.default', p: 2 }}
+          >
+          </Box>
         </Typography>
-      </Box> 
+      </Box>
 
 
-         {/* <div>
+      {/* <div>
              <TextField
                 sx={{border: "outset 2px #666666"}}
                 id="title"
@@ -221,11 +222,11 @@ export default function Write() {
 
         </Stack> */}
 
-        <Box
+      <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 2 }}
-        >
-        </Box>
+      >
+      </Box>
     </Box>
   );
 }

@@ -69,10 +69,11 @@ public class PublicBlogApplication {
 					.findFirst()
 					.get();
 
+			LocalDateTime localDateTime = LocalDateTime.now();
 			AppUser user = AppUser.builder()
 					.firstName("admin")
 					.lastName("Admin")
-					.createdAt(null)	
+					.createdAt(localDateTime.toLocalDate())	
 					.build();
 			userRepository.save(user);
 			
@@ -86,22 +87,22 @@ public class PublicBlogApplication {
 			userLoginRepository.save(userLogin);
 
 
-			LocalDateTime localDateTime = LocalDateTime.now();
-			AppUser usera = AppUser.builder()
-					.firstName("Alfiya")
-					.lastName("Khan")
-					.createdAt(localDateTime.toLocalDate())	
-					.build();
-			userRepository.save(usera);
-			
-			UserLogin userLogina = UserLogin.builder()
-					.email("auth@gmail.com")
-					.password(encoder.encode("Auth@123"))
-					.role(Role.AUTHOR)			
-					.authorities(authorities)
-					.user(usera)
-					.build();
-			userLoginRepository.save(userLogina);
+//			
+//			AppUser usera = AppUser.builder()
+//					.firstName("Alfiya")
+//					.lastName("Khan")
+//					.createdAt(localDateTime.toLocalDate())	
+//					.build();
+//			userRepository.save(usera);
+//			
+//			UserLogin userLogina = UserLogin.builder()
+//					.email("auth@gmail.com")
+//					.password(encoder.encode("Auth@123"))
+//					.role(Role.AUTHOR)			
+//					.authorities(authorities)
+//					.user(usera)
+//					.build();
+//			userLoginRepository.save(userLogina);
 			
 
 			Tag tag = Tag.builder()
@@ -110,13 +111,13 @@ public class PublicBlogApplication {
 			tagRepository.save(tag);
 			List<Tag> list = new ArrayList<Tag>();
 			list.add(tag);
-			Post post = Post.builder()
-					.title("Initial Post")
-					.description("Testing purpose only. qwerty qwerty qwerty qwerty qwerty qwe Testing purpose only. qwerty qwerty qwerty qwerty qwerty qwe")
-//					.tags(list)
-//					.user(usera)
-					.build();
-			postRepository.save(post);
+//			Post post = Post.builder()
+//					.title("Initial Post")
+//					.description("Testing purpose only. qwerty qwerty qwerty qwerty qwerty qwe Testing purpose only. qwerty qwerty qwerty qwerty qwerty qwe")
+////					.tags(list)
+//					.user(user)
+//					.build();
+//			postRepository.save(post);
 			
 			Tag tag2 = Tag.builder()
 					.name("Sports")

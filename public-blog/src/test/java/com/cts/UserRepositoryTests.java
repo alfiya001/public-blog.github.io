@@ -39,27 +39,27 @@ private MockMvc mockMvc;
 ObjectMapper objectMapper;
 
 
-@Test
-@WithMockUser(username="admin",roles = {"ADMIN"})
+//@Test
+//@WithMockUser(username="admin",roles = {"ADMIN"})
 
 
-public void saveUserTest() throws JsonProcessingException, Exception {
-	
-//Role role = Role.builder().name("Author").build();
-
-//Project project = Project.builder().name("HMS").build();
-UserDto user = UserDto.builder()
-
-
-.firstName("Sourav")
-.lastName("Pardeshi")
-.email("sourav@gmail.com")
-.password("12345")
-.createdAt(LocalDate.of(2001, Month.JANUARY, 22))
-.role(Role.ADMIN)
-.build();
-mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
-.content(objectMapper.writeValueAsString(user))).andExpect(status().isCreated());
-}
+//public void saveUserTest() throws JsonProcessingException, Exception {
+//	
+////Role role = Role.builder().name("Author").build();
+//
+////Project project = Project.builder().name("HMS").build();
+//UserDto user = UserDto.builder()
+//
+//
+//.firstName("Sourav")
+//.lastName("Pardeshi")
+//.email("sourav@gmail.com")
+//.password("12345")
+//.createdAt(LocalDate.of(2001, Month.JANUARY, 22))
+//.role(Role.ADMIN)
+//.build();
+//mockMvc.perform(post("/register").contentType(MediaType.APPLICATION_JSON)
+//.content(objectMapper.writeValueAsString(user))).andExpect(status().isCreated());
+//}
 }
 

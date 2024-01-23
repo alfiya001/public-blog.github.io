@@ -29,9 +29,14 @@ const useStyles = makeStyles((theme) => ({
   blogTitle: {
     fontWeight: 800,
     paddingBottom: theme.spacing(3),
+    alignContent: "left",
   },
   singleBlogContainer: {
     paddingTop: theme.spacing(3),
+  },
+  cardData: {
+    padding: "50px",
+    justifyContent: "left"
   },
   card: {
     maxWidth: "100%",
@@ -45,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   author: {
-    display: "flex",
+    display: "flex"
   },
   BookmarkBorderIcon: {
     cursor: "default",
@@ -151,14 +156,15 @@ export default function SinglePost() {
                   image="https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg"
                   title="Contemplative Reptile"
                 />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
+                <CardContent  className={classes.cardData}>
+                  <Typography className={classes.blogTitle} gutterBottom variant="h5" component="h2">
                     {post.title}
                   </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
                     component="p"
+                    style={{ fontSize: "22px" }}
                   >
                     {post.description}
                   </Typography>
@@ -192,7 +198,7 @@ export default function SinglePost() {
             </Card>
           </Box>
         </Container>
-        <Comments></Comments>
+        <Comments  maxWidth="lg"></Comments>
         <Footer></Footer>
       </div>
     </>

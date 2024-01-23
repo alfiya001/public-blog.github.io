@@ -51,7 +51,7 @@ public class UserSecurityConfiguration extends WebSecurityConfigurerAdapter  {
 				.cors()
 				.and()
 				.authorizeRequests()
-				.antMatchers("/register/**", "/static/**", "/authenticate/**", "/swagger-ui/**", "/post/**", "/like/**")
+				.antMatchers("/register/**", "/static/**", "/authenticate/**", "/swagger-ui/**", "/post/**", "/likebyuser/**")
 				.permitAll()
 				.anyRequest()
 				.authenticated()

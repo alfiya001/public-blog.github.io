@@ -18,15 +18,17 @@ import { useNavigate } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 import dateFormat from "dateformat";
 
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import CircularProgress from '@mui/material/CircularProgress';
+import { Container } from "@material-ui/core";
 
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 
 import { useForm } from "react-hook-form";
 
@@ -35,9 +37,14 @@ export default function AuthorBlogList() {
   const [blogData, setAllPost] = React.useState([]);
   const [user, setUser] = React.useState([]);
   const [postId, setPostId] = React.useState(null);
-  const [title, setTitle] = React.useState('');
-  const [description, setDescription] = React.useState('');
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [isLoading, setLoading] = React.useState(false);
 
   const columns = [
     { id: "id", label: "Blog Id", minWidth: 50, align: "center" },
@@ -47,13 +54,16 @@ export default function AuthorBlogList() {
   const [open, setOpen] = React.useState(false);
   // localStorage.setItem("tagid", 0);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-    getPost();
-  };
+  // const handleClickOpen = () => {
+  //   getPost();
+  // };
 
-  const handleClose = () => {
+  const handleClose = (e) => {
+    // e.preventDefault();
+    setTitle('');
+    setDescription('');
     setOpen(false);
+    setLoading(false);
   };
   const getAllpost = () => {
     const userid = localStorage.getItem("userid");
@@ -96,7 +106,7 @@ export default function AuthorBlogList() {
   }, []);
   console.log("globle data", blogData);
 
-  const getPost = () => {
+  const getPost = (postId) => {
     axios
       .get(`http://localhost:8090/post/${postId}`, {
         headers: {
@@ -105,49 +115,55 @@ export default function AuthorBlogList() {
       })
 
       .then((response) => {
-        setTitle(response["data"]["title"])
-        setDescription(response["data"]["description"])
-        setUser(response["data"]["user"])
+        setTitle(response["data"]["title"]);
+        setDescription(response["data"]["description"]);
+        setUser(response["data"]["user"]);
         // setPost(response["data"]);
         // setComments(response["data"]["comments"])
-        console.log(response["data"]);
+        console.log("title: ",  title);
+        setOpen(true);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("There was an error!", error);
       });
-  }
+  };
 
   const onSubmit = (data) => {
-    console.log("data:",data)
+    console.log("data:", data);
     const reqdata = {
       title: data.title,
       description: data.description,
       // tags: tag,
       user: user,
       // comments: comments
-    }
-    
-    axios.patch(`http://localhost:8090/post/${postId}`, reqdata, {
-      headers: {
-        authorization: "Bearer " + getToken(),
-        'Content-Type': 'application/json',
-      },
-    })
-        .then(response => {
-          navigate("/dashboard") 
-          console.log(response) 
-        })
-        .catch(error => {
-            console.error('There was an error!', error);
-        });
-  }
+    };
+
+    axios
+      .patch(`http://localhost:8090/post/${postId}`, reqdata, {
+        headers: {
+          authorization: "Bearer " + getToken(),
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        navigate("/dashboard");
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  };
 
   return (
     <div className="AuthorBlogList">
+      {isLoading && <Container maxWidth="lg">
+      <CircularProgress/>
+    </Container>}
       {/* <AuthorDashboard /> */}
 
-      <Paper sx={{ml:25}}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+      <Paper sx={{ ml: 25,  width: "100%", height:"100%" }}>
+        <TableContainer sx={{ marginTop: "30px", maxHeight: 440 }}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow>
@@ -183,10 +199,11 @@ export default function AuthorBlogList() {
                         );
                       })}
                       <TableCell>
-                      <IconButton onClick={handleClickOpen}
+                        <IconButton
                           onClick={(event) => {
-                            setPostId(row.id)
-                            handleClickOpen()
+                            setLoading(true);
+                            // setPostId(row.id)
+                            getPost(row.id);
                             // navigate(`/dashboard/${row.id}`);
                             // navigate(`/edit-blog/${row.id}`);
                           }}
@@ -210,57 +227,63 @@ export default function AuthorBlogList() {
         </TableContainer>
       </Paper>
 
-      {/* Edit dialog */}  
+      {/* Edit dialog */}
 
-
-    <div>
-      <Dialog open={open} onClose={handleClose}>
-      <Box
-        component="form"
-        sx={{
-        '& .MuiTextField-root': {},
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <DialogTitle>Subscribe {postId}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We
-            will send updates occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            value={title}
-            margin="dense"
-            id="title"
-            label="Blog Title"
-            type="text"
-            fullWidth
-            variant="standard"
-            {...register("title", { required: "Title is required." })}
-                  error={Boolean(errors.title)}
-                  helperText={errors.title?.message}
-                onChange={(e)=>{setTitle(e.target.value);}}
-          />
-          <TextField
-            autoFocus
-            value={description}
-            margin="dense"
-            id="description"
-            label="Blog description"
-            type="text"
-            fullWidth
-            variant="standard"
-            multiline
-            rows={20}
-            {...register("description", { required: "description is required." })}
-                  error={Boolean(errors.description)}
-                  helperText={errors.description ?.message}
-                onChange={(e)=>{setDescription(e.target.value);}}
-          />
-          {/* <TextField
+      {!isLoading && (
+      <div>
+        <Dialog open={open} onClose={handleClose}>
+          <Box
+            component="form"
+            sx={{
+              "& .MuiTextField-root": {},
+            }}
+            noValidate
+            autoComplete="off"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <DialogTitle>Edit Blog Details</DialogTitle>
+            <DialogContent>
+              {/* <DialogContentText>
+                To subscribe to this website, please enter your email address
+                here. We will send updates occasionally.
+              </DialogContentText> */}
+              <TextField
+                autoFocus
+                value={title}
+                margin="dense"
+                id="title"
+                label="Blog Title"
+                type="text"
+                fullWidth
+                variant="standard"
+                {...register("title", { required: "Title is required." })}
+                error={Boolean(errors.title)}
+                helperText={errors.title?.message}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+              />
+              <TextField
+                autoFocus
+                value={description}
+                margin="dense"
+                id="description"
+                label="Blog description"
+                type="text"
+                fullWidth
+                variant="standard"
+                multiline
+                rows={15}
+                {...register("description", {
+                  required: "Description is required.",
+                })}
+                error={Boolean(errors.description)}
+                helperText={errors.description?.message}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                }}
+              />
+              {/* <TextField
             autoFocus
             margin="dense"
             id="description"
@@ -276,16 +299,16 @@ export default function AuthorBlogList() {
                   helperText={errors.description?.message}
             onChange={(e)=>{setDescription(e.target.value);}}
             /> */}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained">Save Changes</Button>
-        </DialogActions>
-      </Box>
-      </Dialog>
-    </div>
-
-
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button type="submit" variant="contained">
+                Save Changes
+              </Button>
+            </DialogActions>
+          </Box>
+        </Dialog>
+      </div>)}
     </div>
   );
 }
